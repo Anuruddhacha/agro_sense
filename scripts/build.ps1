@@ -48,6 +48,7 @@ try {
 
     Write-Host "Building..." -ForegroundColor Cyan
     Setup-QtToolchain -QtDir $QtDir | Out-Null
+    Stop-RunningApp -BuildDir $BuildDir
     cmake --build . --config $Config --parallel
     if ($LASTEXITCODE -ne 0) { throw "Build failed" }
 

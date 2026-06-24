@@ -110,6 +110,21 @@ function Get-CmakeConfigureArgs {
     return $args
 }
 
+function Stop-RunningApp {
+    param([string]$BuildDir)
+
+    $exe = Get-ExecutablePath -BuildDir $BuildDir
+    if (-not $exe) { return }
+
+    $procName = [System.IO.Path]::GetFileNameWithoutExtension($exe)
+    $running = Get-Process -Name $procName -ErrorAction SilentlyContinue
+    if ($running) {
+        Write-Host "Closing running $procName (required to replace .exe)..." -ForegroundColor Yellow
+        $running | Stop-Process -Force
+        Start-Sleep -Milliseconds 500
+    }
+}
+
 function Get-BuildDir {
     param([string]$ProjectRoot)
     return (Join-Path $ProjectRoot "build")
