@@ -64,7 +64,7 @@ QWidget *MainWindow::buildHeader()
     auto *title = new QLabel(QStringLiteral("Agriculture Sensor Dashboard"));
     title->setObjectName(QStringLiteral("appTitle"));
     auto *subtitle = new QLabel(QStringLiteral(
-        "ESP32 + RS485 · Soil · Weather · Irrigation · Air Quality"));
+        "Live field simulation · ESP32 + RS485 · 1 s refresh"));
     subtitle->setObjectName(QStringLiteral("appSubtitle"));
     titleBlock->addWidget(title);
     titleBlock->addWidget(subtitle);
@@ -262,48 +262,66 @@ QWidget *MainWindow::buildDeviceSection()
 
 void MainWindow::onDataUpdated(const SensorSnapshot &s)
 {
+    const double moistureAvg = (s.soil.moistureProbe + s.soil.moistureCapacitive + s.soil.moistureRs485) / 3.0;
+
     m_moistureProbeCard->setValue(QString::number(s.soil.moistureProbe, 'f', 1));
+    m_moistureProbeCard->setSubValue(QStringLiteral("VWC · Field avg %1%").arg(QString::number(moistureAvg, 'f', 1)));
     m_moistureProbeCard->setStatus(
         s.soil.moistureProbe < 25 ? QStringLiteral("DRY") :
-        s.soil.moistureProbe > 70 ? QStringLiteral("WET") : QStringLiteral("OK"),
+        s.soil.moistureProbe > 70 ? QStringLiteral("SATURATED") : QStringLiteral("OK"),
         s.soil.moistureProbe < 25 || s.soil.moistureProbe > 70 ? QStringLiteral("warn") : QStringLiteral("ok"));
 
     m_phCard->setValue(QString::number(s.soil.ph, 'f', 2));
-    m_phCard->setSubValue(QStringLiteral("Optimal range: 6.0 – 7.0"));
+    m_phCard->setSubValue(QStringLiteral("Crop range 6.0 – 7.0 · Industrial probe"));
     m_phCard->setStatus(
-        s.soil.ph < 5.5 || s.soil.ph > 7.5 ? QStringLiteral("CHECK") : QStringLiteral("OK"),
+        s.soil.ph < 5.5 || s.soil.ph > 7.5 ? QStringLiteral("OUT OF RANGE") : QStringLiteral("OK"),
         s.soil.ph < 5.5 || s.soil.ph > 7.5 ? QStringLiteral("warn") : QStringLiteral("ok"));
 
     m_ecCard->setValue(QString::number(s.soil.ec, 'f', 2));
-    m_ecCard->setSubValue(QStringLiteral("Salinity indicator"));
+    m_ecCard->setSubValue(
+        s.soil.ec < 0.8 ? QStringLiteral("Low salinity · nutrients may leach") :
+        s.soil.ec > 2.5 ? QStringLiteral("High salinity · check irrigation water") :
+                          QStringLiteral("Normal range for vegetables"));
+    m_ecCard->setStatus(
+        s.soil.ec < 0.8 || s.soil.ec > 2.5 ? QStringLiteral("CHECK") : QStringLiteral("OK"),
+        s.soil.ec < 0.8 || s.soil.ec > 2.5 ? QStringLiteral("warn") : QStringLiteral("ok"));
 
     m_npkCard->setValue(QStringLiteral("N %1").arg(int(s.soil.nitrogen)));
-    m_npkCard->setSubValue(QStringLiteral("P %1 · K %2 mg/kg")
+    m_npkCard->setSubValue(QStringLiteral("P %1 · K %2 mg/kg · RS485 NPK probe")
                                .arg(int(s.soil.phosphorus))
                                .arg(int(s.soil.potassium)));
 
     m_moistureCapCard->setValue(QString::number(s.soil.moistureCapacitive, 'f', 1));
+    m_moistureCapCard->setSubValue(QStringLiteral("Capacitive · Δ probe %1%")
+                                       .arg(QString::number(s.soil.moistureProbe - s.soil.moistureCapacitive, 'f', 1)));
     m_moistureRs485Card->setValue(QString::number(s.soil.moistureRs485, 'f', 1));
+    m_moistureRs485Card->setSubValue(QStringLiteral("Modbus RS485 · 9600 baud"));
 
     m_sht31Card->setValue(QString::number(s.weather.temperature, 'f', 1));
-    m_sht31Card->setSubValue(QStringLiteral("Humidity %1% RH")
-                                 .arg(QString::number(s.weather.humidity, 'f', 1)));
+    m_sht31Card->setSubValue(QStringLiteral("RH %1% · Dew risk %2")
+                                 .arg(QString::number(s.weather.humidity, 'f', 1))
+                                 .arg(s.weather.humidity > 85 && s.weather.temperature < 18
+                                          ? QStringLiteral("elevated") : QStringLiteral("low")));
 
     m_rainCard->setValue(QString::number(s.weather.rainfall, 'f', 1));
-    m_rainCard->setSubValue(QStringLiteral("Rate %1 mm/h")
+    m_rainCard->setSubValue(QStringLiteral("Session total · Rate %1 mm/h")
                                 .arg(QString::number(s.weather.rainRate, 'f', 1)));
     m_rainCard->setStatus(
-        s.weather.rainRate > 0 ? QStringLiteral("RAINING") : QStringLiteral("DRY"),
-        s.weather.rainRate > 0 ? QStringLiteral("info") : QStringLiteral("ok"));
+        s.weather.rainRate > 0.5 ? QStringLiteral("RAINING") : QStringLiteral("DRY"),
+        s.weather.rainRate > 0.5 ? QStringLiteral("info") : QStringLiteral("ok"));
 
     m_flowCard->setValue(QString::number(s.water.flowRate, 'f', 1));
-    m_flowCard->setSubValue(QStringLiteral("Total %1 L").arg(QString::number(s.water.flowTotal, 'f', 1)));
+    m_flowCard->setSubValue(QStringLiteral("Session %1 L · Drip line")
+                                .arg(QString::number(s.water.flowTotal, 'f', 1)));
     m_flowCard->setStatus(
-        s.water.flowRate > 0 ? QStringLiteral("FLOWING") : QStringLiteral("IDLE"),
-        s.water.flowRate > 0 ? QStringLiteral("info") : QStringLiteral("ok"));
+        s.water.flowRate > 0.2 ? QStringLiteral("IRRIGATING") : QStringLiteral("IDLE"),
+        s.water.flowRate > 0.2 ? QStringLiteral("info") : QStringLiteral("ok"));
 
     m_co2Card->setValue(QString::number(s.air.co2, 'f', 0));
-    m_co2Card->setSubValue(QStringLiteral("Ambient CO₂ level"));
+    m_co2Card->setSubValue(
+        s.air.co2 > 1000 ? QStringLiteral("Ventilation recommended") :
+        s.air.co2 < 420 ? QStringLiteral("Outdoor ambient level") :
+                          QStringLiteral("Greenhouse ambient"));
     m_co2Card->setStatus(
         s.air.co2 > 1000 ? QStringLiteral("HIGH") : QStringLiteral("OK"),
         s.air.co2 > 1000 ? QStringLiteral("warn") : QStringLiteral("ok"));

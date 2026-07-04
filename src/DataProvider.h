@@ -45,7 +45,29 @@ private slots:
 private:
     void parseModbusFrame(const QByteArray &frame);
     void updateSimulation();
+    void initSimulationState();
     void emitSnapshot();
+
+    struct SimulationState {
+        bool initialized = false;
+        double soilMoisture = 42.0;
+        double soilPh = 6.55;
+        double soilEc = 1.45;
+        double nitrogen = 48.0;
+        double phosphorus = 22.0;
+        double potassium = 135.0;
+        double airTemperature = 24.0;
+        double airHumidity = 62.0;
+        double co2 = 415.0;
+        double rainSessionMm = 0.0;
+        double rainRate = 0.0;
+        double flowRate = 0.0;
+        bool raining = false;
+        bool irrigating = false;
+        int rainTicksLeft = 0;
+        int irrigationTicksLeft = 0;
+        int tickCount = 0;
+    };
 
     SensorSnapshot m_snapshot;
 #ifdef HAS_QT_SERIALPORT
@@ -54,5 +76,5 @@ private:
     QTimer m_simulationTimer;
     QByteArray m_rxBuffer;
     bool m_simulationEnabled = true;
-    double m_flowAccumulator = 0.0;
+    SimulationState m_sim;
 };

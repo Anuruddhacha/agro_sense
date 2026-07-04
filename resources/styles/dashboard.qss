@@ -1,8 +1,8 @@
-/* Agriculture Sensor Dashboard - Dark green theme */
+/* Agriculture Sensor Dashboard — black & green theme */
 
 QWidget#mainWindow {
-    background-color: #0f1a14;
-    color: #e8f5e9;
+    background-color: #000000;
+    color: #e0ffe8;
     font-family: "Segoe UI", "SF Pro Display", sans-serif;
     font-size: 13px;
 }
@@ -13,55 +13,54 @@ QScrollArea#dashboardScroll {
 }
 
 QFrame#headerFrame {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 #1b3d2f, stop:1 #0f2a1f);
-    border: 1px solid #2e5c44;
+    background-color: #0a0a0a;
+    border: 1px solid #2e7d32;
     border-radius: 12px;
 }
 
 QLabel#appTitle {
     font-size: 26px;
     font-weight: 700;
-    color: #c8f7d8;
+    color: #4caf50;
 }
 
 QLabel#appSubtitle {
     font-size: 13px;
-    color: #8fbf9f;
+    color: #66bb6a;
 }
 
 QLabel#connectionBadge {
     font-size: 14px;
     font-weight: 600;
-    color: #ff8a65;
+    color: #388e3c;
 }
 
 QLabel#connectionBadge[connected="true"] {
-    color: #69f0ae;
+    color: #00e676;
 }
 
 QLabel#lastUpdate {
     font-size: 12px;
-    color: #7a9e88;
+    color: #4caf50;
 }
 
 QFrame#connectionPanel {
-    background-color: #152820;
-    border: 1px solid #2a4a38;
+    background-color: #0a0a0a;
+    border: 1px solid #1b5e20;
     border-radius: 10px;
 }
 
 QLabel#panelLabel {
     font-weight: 600;
-    color: #a5d6b0;
+    color: #66bb6a;
 }
 
 QComboBox, QComboBox#portCombo {
-    background-color: #1c3328;
-    border: 1px solid #3d6b52;
+    background-color: #111111;
+    border: 1px solid #2e7d32;
     border-radius: 6px;
     padding: 6px 10px;
-    color: #e8f5e9;
+    color: #e0ffe8;
     min-height: 28px;
 }
 
@@ -75,141 +74,150 @@ QComboBox::drop-down {
 }
 
 QComboBox QAbstractItemView {
-    background-color: #1c3328;
-    color: #e8f5e9;
-    selection-background-color: #2e7d4f;
-    border: 1px solid #3d6b52;
+    background-color: #0a0a0a;
+    color: #e0ffe8;
+    selection-background-color: #1b5e20;
+    selection-color: #00e676;
+    border: 1px solid #2e7d32;
 }
 
 QPushButton#primaryButton {
-    background-color: #2e7d4f;
-    color: white;
-    border: none;
+    background-color: #1b5e20;
+    color: #e0ffe8;
+    border: 1px solid #4caf50;
     border-radius: 8px;
     padding: 8px 18px;
     font-weight: 600;
 }
 
 QPushButton#primaryButton:hover {
-    background-color: #3d9a62;
+    background-color: #2e7d32;
+    border-color: #66bb6a;
 }
 
 QPushButton#secondaryButton {
-    background-color: #1c3328;
-    color: #c8f7d8;
-    border: 1px solid #3d6b52;
+    background-color: #0a0a0a;
+    color: #81c784;
+    border: 1px solid #2e7d32;
     border-radius: 8px;
     padding: 8px 14px;
 }
 
 QPushButton#secondaryButton:hover {
+    background-color: #111111;
     border-color: #4caf50;
+    color: #a5d6a7;
 }
 
 QPushButton#toggleButton {
-    background-color: #1a3d52;
-    color: #81d4fa;
-    border: 1px solid #2a6a8a;
+    background-color: #0a0a0a;
+    color: #66bb6a;
+    border: 1px solid #2e7d32;
     border-radius: 8px;
     padding: 8px 14px;
     font-weight: 600;
 }
 
 QPushButton#toggleButton:checked {
-    background-color: #1565c0;
-    color: white;
-    border-color: #42a5f5;
+    background-color: #1b5e20;
+    color: #00e676;
+    border-color: #4caf50;
 }
 
 QFrame#sectionFrame {
-    background-color: #13241c;
-    border: 1px solid #254a36;
+    background-color: #050505;
+    border: 1px solid #1b5e20;
     border-radius: 12px;
 }
 
 QLabel#sectionTitle {
     font-size: 16px;
     font-weight: 700;
-    color: #7dcea0;
+    color: #4caf50;
     letter-spacing: 0.5px;
 }
 
 QFrame#sensorCard {
-    background-color: #1a2f24;
-    border: 1px solid #2f5440;
+    background-color: #0a0a0a;
+    border: 1px solid #1b5e20;
     border-radius: 10px;
     min-height: 120px;
 }
 
 QFrame#sensorCard[statusLevel="warn"] {
-    border-color: #ffb74d;
+    border-color: #66bb6a;
 }
 
 QFrame#sensorCard[statusLevel="error"] {
-    border-color: #ef5350;
+    border-color: #388e3c;
 }
 
 QFrame#sensorCard[statusLevel="info"] {
-    border-color: #4fc3f7;
+    border-color: #4caf50;
 }
 
 QLabel#cardIcon {
     font-size: 22px;
+    color: #4caf50;
 }
 
 QLabel#cardTitle {
     font-size: 13px;
     font-weight: 600;
-    color: #b2dfbc;
+    color: #81c784;
 }
 
 QLabel#cardStatus {
     font-size: 11px;
     font-weight: 700;
-    color: #69f0ae;
+    color: #00e676;
     letter-spacing: 0.5px;
 }
 
 QFrame#sensorCard[statusLevel="warn"] QLabel#cardStatus {
-    color: #ffb74d;
+    color: #a5d6a7;
 }
 
 QFrame#sensorCard[statusLevel="error"] QLabel#cardStatus {
-    color: #ef5350;
+    color: #388e3c;
 }
 
 QFrame#sensorCard[statusLevel="info"] QLabel#cardStatus {
-    color: #4fc3f7;
+    color: #66bb6a;
 }
 
 QLabel#cardValue {
     font-size: 36px;
     font-weight: 700;
-    color: #e8f5e9;
+    color: #e0ffe8;
 }
 
 QLabel#cardUnit {
     font-size: 16px;
-    color: #7a9e88;
+    color: #4caf50;
     padding-bottom: 6px;
     padding-left: 4px;
 }
 
 QLabel#cardSub {
     font-size: 12px;
-    color: #7a9e88;
+    color: #388e3c;
 }
 
 QScrollBar:vertical {
-    background: #0f1a14;
+    background: #000000;
     width: 10px;
     border-radius: 5px;
 }
 
 QScrollBar::handle:vertical {
-    background: #2e5c44;
+    background: #2e7d32;
     border-radius: 5px;
     min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4caf50;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
@@ -217,5 +225,23 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 }
 
 QMessageBox {
-    background-color: #1a2f24;
+    background-color: #0a0a0a;
+    color: #e0ffe8;
+}
+
+QMessageBox QLabel {
+    color: #81c784;
+}
+
+QMessageBox QPushButton {
+    background-color: #1b5e20;
+    color: #e0ffe8;
+    border: 1px solid #4caf50;
+    border-radius: 6px;
+    padding: 6px 16px;
+    min-width: 72px;
+}
+
+QMessageBox QPushButton:hover {
+    background-color: #2e7d32;
 }
